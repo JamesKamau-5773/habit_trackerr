@@ -2,6 +2,7 @@ from lib.models.models import session, Habit, Category, Completion
 from lib.crud import create_habit, get_habit_by_name, get_all_habits, log_completion, calculate_streak, delete_habit
 import datetime
 
+
 def run_tests():
     print("Running tests...")
 
