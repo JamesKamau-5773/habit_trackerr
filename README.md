@@ -45,6 +45,22 @@ Bash
 alembic revision --autogenerate -m "initial migration"
 alembic upgrade head
 
+Troubleshooting Migration Issues
+If you encounter errors like "Target database is not up to date" during initial migration setup, run these commands to reset the database:
+
+bash
+# Remove the existing database
+rm -rf db/
+
+# Create new database directory and file
+mkdir db
+touch db/habit_tracker.db
+
+# Now you can create new migrations
+alembic revision --autogenerate -m "initial migration"
+alembic upgrade head
+
+
 Seed the Database with Sample Data (Optional)
 
 Bash
@@ -155,6 +171,7 @@ Author
 License
 
 This project is licensed under the MIT License.
+
 
 
 
