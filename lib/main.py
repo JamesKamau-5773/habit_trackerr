@@ -1,110 +1,117 @@
+import sys
+sys.path.insert(0, '/home/james/clas-practice-folders/code/se-prep/habit_tracker')
+
 import click
 from rich.console import Console
 from rich.table import Table
-from lib.crud import (
-    create_category, create_habit, log_completion, get_habit_streak,
-    get_all_categories, get_all_habits, get_habits_by_category,
-    get_completions_by_habit, get_habit_by_id, get_category_by_id
-)
+from lib.crud import *
 
 console = Console()
 
-@click.group()
-def cli():
-    """Habit Tracker CLI - Manage your daily habits"""
-    pass
-
-@cli.command()
-@click.option('--name', prompt='Category name', help='Name of the category')
-def add_category(name):
-    """Add a new habit category"""
-    category = create_category(name)
-    console.print(f"[green]Category '{category.name}' created successfully![/green]")
-
-@cli.command()
-@click.option('--name', prompt='Habit name', help='Name of the habit')
-@click.option('--description', prompt='Habit description', help='Description of the habit')
-@click.option('--category-id', prompt='Category ID', type=int, help='ID of the category')
-def add_habit(name, description, category_id):
-    """Add a new habit"""
-    habit = create_habit(name, description, category_id)
-    console.print(f"[green]Habit '{habit.name}' created successfully![/green]")
-
-@cli.command()
-@click.option('--habit-id', prompt='Habit ID', type=int, help='ID of the habit')
-@click.option('--notes', default='', help='Notes for the completion')
-def log_habit(habit_id, notes):
-    """Log completion of a habit for today"""
-    completion = log_completion(habit_id, notes)
-    console.print(f"[green]Habit completion logged for {completion.date}![/green]")
-
-@cli.command()
-@click.option('--habit-id', prompt='Habit ID', type=int, help='ID of the habit')
-def view_streak(habit_id):
-    """View current streak for a habit"""
-    streak = get_habit_streak(habit_id)
-    habit = get_habit_by_id(habit_id)
-    if habit:
-        console.print(f"[yellow]Current streak for '{habit.name}': {streak} days[/yellow]")
-    else:
-        console.print("[red]Habit not found![/red]")
-
-@cli.command()
-def list_categories():
-    """List all categories"""
+def display_categories():
     categories = get_all_categories()
-    table = Table(title="Categories")
-    table.add_column("ID", style="cyan")
-    table.add_column("Name", style="magenta")
-    table.add_column("Created At", style="green")
+    if not categories:
+        console.print("No categories found")
+        return
+    
+    table = Table(title="Habit Categories", show_header=True)
+    table.add_column("ID")
+    table.add_column("Name")
+    table.add_column("Created")
     
     for category in categories:
-        table.add_row(str(category.id), category.name, str(category.created_at))
-    
-    console.print(table)
-
-@cli.command()
-def list_habits():
-    """List all habits"""
-    habits = get_all_habits()
-    table = Table(title="Habits")
-    table.add_column("ID", style="cyan")
-    table.add_column("Name", style="magenta")
-    table.add_column("Description", style="yellow")
-    table.add_column("Streak", style="green")
-    table.add_column("Category", style="blue")
-    
-    for habit in habits:
-        category = get_category_by_id(habit.category_id)
         table.add_row(
-            str(habit.id), 
-            habit.name, 
-            habit.description or "", 
-            str(habit.streak),
-            category.name if category else "Unknown"
+            str(category.id),
+            category.name,
+            category.created_at.strftime("%Y-%m-%d")
         )
     
     console.print(table)
 
-@cli.command()
-@click.option('--habit-id', prompt='Habit ID', type=int, help='ID of the habit')
-def view_completions(habit_id):
-    """View completion history for a habit"""
-    completions = get_completions_by_habit(habit_id)
-    habit = get_habit_by_id(habit_id)
+def display_habits():
+    habits = get_all_habits()
+    if not habits:
+        console.print("No habits found")
+        return
     
-    if habit:
-        table = Table(title=f"Completions for '{habit.name}'")
-        table.add_column("Date", style="cyan")
-        table.add_column("Notes", style="magenta")
-        table.add_column("Created At", style="green")
-        
-        for completion in completions:
-            table.add_row(str(completion.date), completion.notes or "", str(completion.created_at))
-        
-        console.print(table)
-    else:
-        console.print("[red]Habit not found![/red]")
+    table = Table(title="Your Habits", show_header=True)
+    table.add_column("ID")
+    table.add_column("Name")
+    table.add_column("Category")
+    table.add_column("Streak")
+    
+    for habit in habits:
+        table.add_row(
+            str(habit.id),
+            habit.name,
+            habit.category.name,
+            str(habit.streak)
+        )
+    
+    console.print(table)
 
-if __name__ == '__main__':
-    cli()
+def add_category_menu():
+    console.print("Add a new habit category")
+    name = input("Enter the category name: ")
+    create_category(name)
+    console.print("Category added successfully")
+
+def add_habit_menu():
+    console.print("Add a new habit")
+    display_categories()
+    name = input("Enter the habit name: ")
+    description = input("Enter the habit description: ")
+    category_id = int(input("Enter the category ID: "))
+    create_habit(name, description, category_id)
+    console.print("Habit added successfully")
+
+def log_completion_menu():
+    console.print("Log completion of a habit")
+    display_habits()
+    habit_id = int(input("Enter the habit ID: "))
+    notes = input("Enter any notes: ")
+    log_completion(habit_id, notes)
+    console.print("Completion logged successfully")
+
+def view_streak_menu():
+    console.print("View current streak for a habit")
+    display_habits()
+    habit_id = int(input("Enter the habit ID: "))
+    streak = get_habit_streak(habit_id)
+    console.print(f"Current streak for habit {habit_id}: {streak} days")
+
+@click.command()
+def main_menu():
+    while True:
+        console.print("Habit Tracker CLI")
+        console.print("Select an option:")
+        console.print("[1] Add a new habit category")
+        console.print("[2] Add a new habit")
+        console.print("[3] Log completion of a habit")
+        console.print("[4] View current streak for a habit")
+        console.print("[5] View all categories")
+        console.print("[6] View all habits")
+        console.print("[7] Quit")
+
+        option = input("Enter your choice: ")
+
+        if option == "1":
+            add_category_menu()
+        elif option == "2":
+            add_habit_menu()
+        elif option == "3":
+            log_completion_menu()
+        elif option == "4":
+            view_streak_menu()
+        elif option == "5":
+            display_categories()
+        elif option == "6":
+            display_habits()
+        elif option == "7":
+            console.print("Goodbye")
+            break
+        else:
+            console.print("Invalid option")
+
+if __name__ == "__main__":
+    main_menu()

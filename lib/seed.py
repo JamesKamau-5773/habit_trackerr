@@ -1,4 +1,4 @@
-from lib.models.models import Category, Habit, Completion, session
+from lib.models import Category, Habit, Completion, session
 from datetime import datetime, timedelta
 
 def seed_data():
