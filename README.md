@@ -146,7 +146,7 @@ Dependencies
 Author
 
     Name: Najma Boru
-moringasch
+moringa
     GitHub: qalicha-dev28
 
 
@@ -155,6 +155,7 @@ moringasch
 License
 
 This project is licensed under the MIT License.
+
 
 
 
