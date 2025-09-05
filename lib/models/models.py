@@ -2,7 +2,6 @@ from sqlalchemy import create_engine, Column, Integer, String, Text, Date, DateT
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 from datetime import datetime
 
-
 Base = declarative_base()
 
 class Category(Base):
