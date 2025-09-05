@@ -148,9 +148,11 @@ Author
     Name: Najma Boru
 
     GitHub: qalicha-dev28
+email-najma.com
 
 
 
 License
 
 This project is licensed under the MIT License.
+
