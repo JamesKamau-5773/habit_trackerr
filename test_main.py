@@ -2,7 +2,6 @@
 import sys
 sys.path.insert(0, '.')
 
-
 try:
     from lib.main import cli
     print("✓ Main CLI imported successfully")
