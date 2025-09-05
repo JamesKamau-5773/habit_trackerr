@@ -2,7 +2,6 @@
 import sys
 sys.path.insert(0, '.')
 
-
 try:
     from lib.crud import create_category, create_habit, get_all_categories
     print("✓ CRUD functions imported successfully")
