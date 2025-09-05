@@ -1,7 +1,6 @@
 from models.models import session, Category, Habit, Completion
 from crud import get_all_categories, get_all_habits, get_completions_by_habit
 
-
 def debug_data():
     print("=== DEBUG MODE ===")
     

@@ -1,6 +1,7 @@
 from lib.models.models import Category, Habit, Completion, session
 from datetime import datetime, timedelta
 
+
 def seed_data():
     session.query(Completion).delete()
     session.query(Habit).delete()

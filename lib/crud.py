@@ -3,7 +3,6 @@ from sqlalchemy import create_engine, func, and_
 from datetime import datetime, date, timedelta
 from lib.models.models import Category, Habit, Completion, session
 
-
 def create_category(name):
     category = Category(name=name)
     session.add(category)

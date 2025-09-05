@@ -7,7 +7,6 @@ from lib.crud import (
     get_completions_by_habit, get_habit_by_id, get_category_by_id
 )
 
-
 console = Console()
 
 @click.group()
