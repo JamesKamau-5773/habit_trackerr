@@ -5,7 +5,6 @@ __pycache__/
 *.pyd
 .python-version
 
-
 # Virtual environments
 env/
 venv/
